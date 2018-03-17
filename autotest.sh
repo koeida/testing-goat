@@ -1,3 +1,3 @@
 #! /bin/sh
 
-ag -l | entr sh -c 'python manage.py test'
+ag -l | entr sh -c 'python manage.py test lists'
