@@ -11,12 +11,23 @@ class HomePageTest(TestCase):
         response = self.client.get('/')
         self.assertTemplateUsed(response, 'home.html')
 
-    def test_can_save_a_POST_request(self):
+    def test_redirect_after_post(self):
         response = self.client.post(
             '/', 
-            data={'item_text': 'A new list item'})
-        self.assertIn('A new list item', response.content.decode())  
-        self.assertTemplateUsed(response, 'home.html')
+            data={'item_text': 'lala'})
+
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response['location'], '/')
+
+    def test_can_save_a_POST_request(self):
+        txt = 'A new list item'
+        response = self.client.post(
+            '/', 
+            data={'item_text': txt})
+        self.assertEqual(Item.objects.count(), 1)
+        new_item = Item.objects.first()
+        self.assertEqual(new_item.text, txt)
+
     
     def test_saving_and_retrieving_items(self):
         first_item = Item()
@@ -35,5 +46,17 @@ class HomePageTest(TestCase):
         self.assertEqual(first_saved_item.text, 'The first (ever) list item')
         self.assertEqual(second_saved_item.text, 'Item the second')
 
+    def test_only_saves_items_when_necessary(self):
+        self.client.get('/')
+        self.assertEqual(Item.objects.count(), 0)
+
+    def test_displays_all_list_items(self):
+        Item.objects.create(text='i1')
+        Item.objects.create(text='i2')
+
+        response = self.client.get('/').content.decode()
+
+        self.assertIn('i1', response)
+        self.assertIn('i2', response)
 
 
