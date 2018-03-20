@@ -57,7 +57,7 @@ class NewVisitorTest(LiveServerTestCase):
         inputbox = self.browser.find_element_by_id('id_new_item')
         inputbox.send_keys('Use peacock feathers to make a fly')
         inputbox.send_keys(Keys.ENTER)
-        self.waitfortext('id_list_table','2: Use peacock feathers to make a fly')
+        self.waitfortext('id_list_table','Use peacock feathers to make a fly')
 
         # The page updates again, and now shows both items on her list
         table = self.browser.find_element_by_id('id_list_table')
