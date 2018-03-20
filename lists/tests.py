@@ -17,7 +17,7 @@ class HomePageTest(TestCase):
             data={'item_text': 'lala'})
 
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(response['location'], '/')
+        self.assertEqual(response['location'], '/lists/the-only-list-in-the-world/')
 
     def test_can_save_a_POST_request(self):
         txt = 'A new list item'
@@ -27,7 +27,6 @@ class HomePageTest(TestCase):
         self.assertEqual(Item.objects.count(), 1)
         new_item = Item.objects.first()
         self.assertEqual(new_item.text, txt)
-
     
     def test_saving_and_retrieving_items(self):
         first_item = Item()
@@ -50,13 +49,17 @@ class HomePageTest(TestCase):
         self.client.get('/')
         self.assertEqual(Item.objects.count(), 0)
 
-    def test_displays_all_list_items(self):
+class ListViewTest(TestCase):
+
+    def test_displays_all_items(self):
         Item.objects.create(text='i1')
         Item.objects.create(text='i2')
+        
+        response = self.client.get('/lists/the-only-list-in-the-world/')
 
-        response = self.client.get('/').content.decode()
+        self.assertContains(response, 'i1')
+        self.assertContains(response, 'i2')
 
-        self.assertIn('i1', response)
-        self.assertIn('i2', response)
-
-
+    def test_uses_list_template(self):
+        response = self.client.get('/lists/the-only-list-in-the-world/')
+        self.assertTemplateUsed(response, 'list.html')

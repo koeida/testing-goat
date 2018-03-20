@@ -26,7 +26,7 @@ class NewVisitorTest(LiveServerTestCase):
         self.assertIn(row_text, [row.text for row in rows])
 
     def waitfortext(self, idStr, text):
-        WebDriverWait(self.browser, 10).until(
+        WebDriverWait(self.browser, 10, 0.1).until(
             EC.text_to_be_present_in_element((By.ID, idStr), text))
 
     def test_can_start_list_and_retrieve_later(self):
@@ -91,7 +91,7 @@ class NewVisitorTest(LiveServerTestCase):
         self.browser.get(self.live_server_url)
         page_text = self.browser.find_element_by_tag_name('body').text
         self.assertNotIn('Buy peacock feathers', page_text)
-        selt.assertNotIn('make a fly', page_text)
+        self.assertNotIn('make a fly', page_text)
 
         # New list entered
         inputbox = self.browser.find_element_by_id('id_new_item')
