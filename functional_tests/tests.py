@@ -8,6 +8,7 @@ from selenium.webdriver.firefox.options import Options
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 
+import os
 import time
 import unittest
 
@@ -16,6 +17,9 @@ class NewVisitorTest(StaticLiveServerTestCase):
         self.options = Options()
         self.options.set_headless(True)
         self.browser = webdriver.Firefox(options=self.options)
+        staging_server = os.environ.get('STAGING_SERVER')
+        if staging_server:
+            self.live_server_url = 'http://' + staging_server
 
     def tearDown(self):
         self.browser.quit()
