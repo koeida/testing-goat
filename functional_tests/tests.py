@@ -26,8 +26,10 @@ class NewVisitorTest(LiveServerTestCase):
         self.assertIn(row_text, [row.text for row in rows])
 
     def waitfortext(self, idStr, text):
-        WebDriverWait(self.browser, 10, 0.1).until(
-            EC.text_to_be_present_in_element((By.ID, idStr), text))
+        time.sleep(1)
+
+        #WebDriverWait(self.browser, 10, 0.1).until(
+        #    EC.text_to_be_present_in_element((By.ID, idStr), text))
 
     def test_can_start_list_and_retrieve_later(self):
         self.browser.get(self.live_server_url)
@@ -109,3 +111,29 @@ class NewVisitorTest(LiveServerTestCase):
         self.assertNotIn('make a fly', page_text)
 
         self.assertNotEqual(francis_list_url, edith_list_url)
+
+    def assert_input_box_is_centered(self):
+        inputbox = self.browser.find_element_by_id('id_new_item')
+        self.assertAlmostEqual(
+            inputbox.location['x'] + inputbox.size['width'] / 2,
+            512,
+            delta=10)
+
+    def test_layout_and_styling(self):
+        #Edith goes to the home page
+        self.browser.get(self.live_server_url)
+        self.browser.set_window_size(1024,768)
+
+        self.assert_input_box_is_centered()
+
+        #She starts a new list and sees the input is nicely centered there, too
+        inputbox = self.browser.find_element_by_id('id_new_item')
+        inputbox.send_keys('testing')
+        inputbox.send_keys(Keys.ENTER)
+
+        self.waitfortext('id_list_table','testing')
+        self.assert_input_box_is_centered()
+
+
+
+
