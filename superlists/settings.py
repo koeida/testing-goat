@@ -25,7 +25,7 @@ SECRET_KEY = 'rchs@z7a6rt@_%(+65#mh9*i8t-$fkty%er-z0=@6$t)y79&4*'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['koneida.pythonanywhere.com]
 
 
 # Application definition
